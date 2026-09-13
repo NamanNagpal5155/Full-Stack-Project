@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const app = express();
 const songRouter = require("./routes/songs.routes");
 const authRouter = require("./routes/auth.routes");
@@ -17,7 +18,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
     res.json({
         message: "MOODIFY API is running",
         endpoints: {
@@ -34,5 +35,11 @@ app.get("/health", (req, res) => {
 app.use("/app", songRouter);
 app.use("/auth", authRouter);
 app.use("/analytics", analyticsRouter);
+
+const frontendDist = path.join(__dirname, "../../Frontend/dist");
+app.use(express.static(frontendDist));
+app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(frontendDist, "index.html"));
+});
 
 module.exports = app;

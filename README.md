@@ -136,13 +136,13 @@ Get-ChildItem -Path src -Recurse -Filter *.js | ForEach-Object { node --check $_
 
 ## Deploying To Render
 
-Deploy the backend and frontend as separate Render services.
+To use one Render domain, deploy the backend and frontend together as one Render Web Service. Express serves the built React app and the API from the same origin.
 
-### Backend Web Service
+### Single Web Service
 
-- Root directory: `Backend`
-- Build command: `npm install`
-- Start command: `npm start`
+- Root directory: repository root
+- Build command: `npm install --prefix Backend && npm install --prefix Frontend && npm run build --prefix Frontend`
+- Start command: `npm start --prefix Backend`
 
 Add these environment variables in Render:
 
@@ -153,13 +153,13 @@ IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
 IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/your_id
 ADMIN_PASSWORD=your_admin_password
 JWT_SECRET=your_long_random_secret
-FRONTEND_URL=https://your-frontend.onrender.com
+FRONTEND_URL=https://your-app.onrender.com
 ```
 
 After deployment, verify:
 
 ```text
-https://your-backend.onrender.com/health
+https://your-app.onrender.com/health
 ```
 
 Expected response:
@@ -168,27 +168,9 @@ Expected response:
 {"status":"ok"}
 ```
 
-### Frontend Static Site
+Do not create a separate Render Static Site for this setup. Leave `VITE_API_URL` empty so the browser uses the current domain for `/auth/login`, `/app/songs`, and the other API routes.
 
-- Root directory: `Frontend`
-- Build command: `npm install && npm run build`
-- Publish directory: `dist`
-
-Add this environment variable:
-
-```env
-VITE_API_URL=https://your-backend.onrender.com
-```
-
-Add a Render rewrite rule for React Router:
-
-```text
-Source: /*
-Destination: /index.html
-Action: Rewrite
-```
-
-The rewrite is required for `/login`, `/signup`, `/dashboard`, and `/wp-admin` to work after refreshing the page.
+The Express fallback serves `Frontend/dist/index.html` for `/login`, `/signup`, `/dashboard`, and `/wp-admin`, so no separate Render rewrite rule is needed.
 
 Camera access requires HTTPS in production. Render provides HTTPS automatically.
 
