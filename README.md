@@ -138,6 +138,8 @@ Get-ChildItem -Path src -Recurse -Filter *.js | ForEach-Object { node --check $_
 
 To use one Render domain, deploy the backend and frontend together as one Render Web Service. Express serves the built React app and the API from the same origin.
 
+The repository includes `render.yaml` with the required service configuration. In Render, choose **New + > Blueprint** and select this repository, or copy the commands below into an existing Web Service.
+
 ### Single Web Service
 
 - Root directory: repository root
