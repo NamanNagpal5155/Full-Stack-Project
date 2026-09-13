@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
+import { motion as Motion } from "framer-motion";
 import { Pause, Play } from "lucide-react";
 import { API_URL, getToken, getUser } from "../api";
 
@@ -101,7 +102,7 @@ export default function FacialExpression() {
 
   return (
     <div className="player-page">
-      <motion.header
+      <Motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="player-header"
@@ -110,10 +111,10 @@ export default function FacialExpression() {
           <nav className="player-nav">
             {getUser() ? <a href="/dashboard">Dashboard</a> : <a href="/login">Log in</a>}
           </nav>
-      </motion.header>
+      </Motion.header>
 
       <div className="player-hero">
-        <motion.video
+        <Motion.video
           ref={videoRef}
           autoPlay
           muted
@@ -123,7 +124,7 @@ export default function FacialExpression() {
           className="player-video"
         />
 
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
@@ -135,22 +136,22 @@ export default function FacialExpression() {
             tailored to your feelings.
           </p>
 
-          <motion.button
+          <Motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleClick}
             className="primary-button player-action"
           >
             Start Listening
-          </motion.button>
+          </Motion.button>
 
           <p className="player-mood">
             <span>{selectedMood ? "Selected Mood:" : "Detected Mood:"}</span> {activeMood}
           </p>
-        </motion.div>
+        </Motion.div>
       </div>
 
-      <motion.div
+      <Motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
@@ -186,7 +187,7 @@ export default function FacialExpression() {
           {filterSongs.map((song) => {
             const playingThis = currentId === song._id && isPlaying;
             return (
-              <motion.div
+              <Motion.div
                 key={song._id}
                 whileHover={{ scale: 1.02 }}
                 className="player-track"
@@ -196,20 +197,20 @@ export default function FacialExpression() {
                   <p className="track-artist">{song.artist}</p>
                 </div>
 
-                <motion.button
+                <Motion.button
                   onClick={() => handlePlay(song)}
                   whileTap={{ scale: 0.9 }}
                   whileHover={{ scale: 1.1 }}
                   className="play-button"
                 >
                   {playingThis ? <Pause size={28} /> : <Play size={28} />}
-                </motion.button>
-              </motion.div>
+                </Motion.button>
+              </Motion.div>
             );
           })}
           </div>
         )}
-      </motion.div>
+      </Motion.div>
 
       {/* Ek hi audio — loop ke BAHAR */}
       <audio
